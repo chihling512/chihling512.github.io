@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chihling512｜個人網頁</title>
+<meta name="description" content="chihling512 的個人網頁：用科技把電子工具用得更順手。">
+<style>
+  /* ============================================
+     想換顏色？只要改下面這幾行的色碼（#開頭的那串）
+     ============================================ */
+  :root {
+    --bg: #0b0b0d;      /* 背景：黑 */
+    --ink: #f6eef2;     /* 主要文字：淡粉白 */
+    --muted: #a99ba3;   /* 次要文字：灰粉 */
+    --line: #2b2227;    /* 分隔線 */
+    --accent: #ff5fa2;  /* 主色：粉紅（連結、剩餘空間） */
+    --seg1: #f6eef2;    /* 容量長條的四個色塊，由深到淺 */
+    --seg2: #bba8b2;
+    --seg3: #7b6772;
+    --seg4: #3e3138;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; color-scheme: dark; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 72px 24px 96px; }
+  h1 { font-size: clamp(2.4rem, 9vw, 3.8rem); line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 12px; }
+  h2 { font-size: 1.15rem; font-weight: 700; margin: 64px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  p { margin: 0 0 1em; }
+  .lead { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  /* 主視覺：像 Mac「儲存空間」的容量長條，粉紅斜線是剩餘空間 */
+  .bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+  .bar span { display: block; height: 100%; transform-origin: left; animation: grow 900ms ease-out both; }
+  .s1 { width: 30%; background: var(--seg1); }
+  .s2 { width: 24%; background: var(--seg2); }
+  .s3 { width: 20%; background: var(--seg3); }
+  .s4 { width: 16%; background: var(--seg4); }
+  .free { width: 10%; background: repeating-linear-gradient(135deg, var(--accent) 0 6px, transparent 6px 12px); }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .bar span { animation: none; } }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; padding: 0; list-style: none; font-size: 0.85rem; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
+
+  ul.plain { padding-left: 1.2em; margin: 0 0 1em; }
+  ul.plain li { margin-bottom: 6px; }
+  .project h3 { margin: 0 0 4px; font-size: 1.1rem; }
+  .project p { margin-bottom: 10px; }
+  .meta { font-size: 0.9rem; color: var(--muted); }
+  .downloads { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 6px; }
+  .btn {
+    display: inline-block; padding: 8px 16px; border: 1px solid var(--accent); border-radius: 6px;
+    color: var(--accent); text-decoration: none; font-size: 0.95rem;
+  }
+  .btn:hover { background: var(--accent); color: var(--bg); }
+  footer { margin-top: 72px; font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>chihling512</h1>
+    <p class="lead">我不是程式設計師，只是想用科技，把電子工具用得更順手的人。</p>
+
+    <div class="bar" role="img" aria-label="儲存空間示意圖：大部分已使用，剩下約 10%">
+      <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="free"></span>
+    </div>
+    <ul class="legend">
+      <li><i style="background:var(--seg1)"></i>系統</li>
+      <li><i style="background:var(--seg2)"></i>應用程式</li>
+      <li><i style="background:var(--seg3)"></i>文件</li>
+      <li><i style="background:var(--seg4)"></i>其他</li>
+      <li><i style="background:repeating-linear-gradient(135deg,var(--accent) 0 3px,transparent 3px 6px);border:1px solid var(--accent)"></i>剩餘</li>
+    </ul>
+    <p class="note">這條長條就是我做第一個小工具的原因：Mac 容量快滿時，我想要有人提醒我。</p>
+  </header>
+
+  <section>
+    <h2>關於我</h2>
+    <p>我正在一步一步嘗試這些事：</p>
+    <ul class="plain">
+      <li>幫自己的電腦做資料整理</li>
+      <li>學習 Illustrator 與 Photoshop，並結合 AI 一起使用</li>
+      <li>創造出自己想像中的電子精靈</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>我做的東西</h2>
+    <div class="project">
+      <h3>Mac 容量不足提醒</h3>
+      <p>Mac 剩餘空間低於 50GB 時，跳出視窗提醒我重新開機；另外還有一個選單列小工具，隨時顯示剩餘空間。兩個可以分開安裝。</p>
+      <div class="downloads">
+        <a class="btn" href="mac-low-disk-alert/install_low_disk_alert.sh" download>下載：容量不足提醒</a>
+        <a class="btn" href="mac-low-disk-alert/install_disk_menubar.sh" download>下載：選單列顯示</a>
+      </div>
+      <p class="meta">適用於 macOS。安裝與解除安裝的步驟請看<a href="mac-low-disk-alert/README.md">說明文件</a>。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>聯絡我</h2>
+    <p><a href="https://github.com/chihling512">github.com/chihling512</a></p>
+  </section>
+
+  <footer>© 2026 chihling512</footer>
+</main>
+</body>
+</html>
