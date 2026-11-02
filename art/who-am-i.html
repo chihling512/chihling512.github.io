@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Who Am I</title>
-  .back { position:fixed; left:12px; top:calc(12px + env(safe-area-inset-top,0px)); z-index:5; width:40px; height:40px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(11,11,13,.55); color:var(--glow); text-decoration:none; font-size:1.2rem; opacity:.7; transition:opacity .3s, background .3s; }
-  .back:hover { opacity:1; background:rgba(255,217,138,.15); }
-  .back:focus-visible { outline:2px solid var(--glow); outline-offset:2px; }
 <style>
   :root { --bg:#0b0b0d; --ink:#f6eef2; --muted:#a99ba3; --line:#2b2227; --glow:#ffd98a;
     --h:100vh; --h:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
@@ -47,6 +44,9 @@
   .credit { position:absolute; right:2.4%; bottom:1.4%; font-size:clamp(.55rem,1.2vw,.75rem); color:rgba(246,238,242,.55); pointer-events:none; transition:opacity .5s; }
   .sel .credit { opacity:0; }
   @media (prefers-reduced-motion: reduce) { .cam,.cap,.zone,.base,.animals,.frame { transition:none; } }
+  .back { position:fixed; left:12px; top:calc(12px + env(safe-area-inset-top,0px)); z-index:5; width:40px; height:40px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(11,11,13,.55); color:var(--glow); text-decoration:none; font-size:1.2rem; opacity:.7; transition:opacity .3s, background .3s; }
+  .back:hover { opacity:1; background:rgba(255,217,138,.15); }
+  .back:focus-visible { outline:2px solid var(--glow); outline-offset:2px; }
 </style>
 </head>
 <body>
