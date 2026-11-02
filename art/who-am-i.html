@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Who Am I</title>
+<style>
+  :root { --bg:#0b0b0d; --ink:#f6eef2; --muted:#a99ba3; --line:#2b2227; --glow:#ffd98a;
+    --h:100vh; --h:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+  html { scroll-padding-top:env(safe-area-inset-top,0px); color-scheme:dark; -webkit-text-size-adjust:100%; }
+  * { box-sizing:border-box; }
+  body { margin:0; height:var(--h); background:var(--bg); color:var(--ink); overflow:hidden; display:grid; place-items:center;
+    font:16px/1.7 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; }
+  .stage { position:relative; width:min(100vw, var(--h)); aspect-ratio:1; touch-action:manipulation; }
+  .view { position:absolute; inset:0; overflow:hidden; }
+  .cam { position:absolute; inset:0; transform-origin:0 0; perspective:1200px; transition:transform .9s cubic-bezier(.2,.8,.2,1); }
+  .world { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
+  .world img { position:absolute; inset:0; width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none; pointer-events:none; }
+  .zone, .base { transition:filter .5s; }
+  .zone.hov { filter:brightness(1.22) saturate(1.1) drop-shadow(0 0 14px rgba(255,217,138,.7)); transition-duration:.25s; }
+  .sel .base { filter:brightness(.4); }
+  .sel .zone:not(.on) { filter:brightness(.4) saturate(.7); }
+  .sel .zone.hov:not(.on) { filter:brightness(.7) saturate(.9) drop-shadow(0 0 12px rgba(255,217,138,.5)); }
+  .animals { position:absolute; inset:0; transition:opacity .5s; }
+  .sel .animals { opacity:0; }
+  .world .an { inset:auto; height:auto; will-change:transform; }
+  .frame { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; transition:opacity .5s; will-change:transform; }
+  .sel .frame { opacity:0; }
+  .hand { cursor:pointer; }
+
+  .cap { position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom,0px)); width:min(560px, 92vw);
+    transform:translate(-50%,12px); padding:14px 16px 10px; border:1px solid var(--line); border-radius:12px;
+    background:rgba(11,11,13,.86); backdrop-filter:blur(8px); opacity:0; pointer-events:none; transition:opacity .4s, transform .4s; }
+  .sel-on .cap { opacity:1; transform:translate(-50%,0); pointer-events:auto; }
+  .cap h2 { margin:0 0 2px; font-size:1.1rem; }
+  .cap p { margin:0; font-size:.95rem; color:#e6d9df; min-height:3.4em; }
+  .ctl { display:flex; justify-content:space-between; align-items:center; margin-top:4px; color:var(--muted); font-size:.8rem; }
+  .ctl div { display:flex; gap:6px; }
+  .ctl button { width:40px; height:40px; border:1px solid var(--line); border-radius:50%; background:none; color:var(--glow); font-size:1.1rem; cursor:pointer; }
+  .ctl button:hover { background:rgba(255,217,138,.12); }
+  .ctl button:focus-visible { outline:2px solid var(--glow); }
+  .credit { position:absolute; right:2.4%; bottom:1.4%; font-size:clamp(.55rem,1.2vw,.75rem); color:rgba(246,238,242,.55); pointer-events:none; transition:opacity .5s; }
+  .sel .credit { opacity:0; }
+  @media (prefers-reduced-motion: reduce) { .cam,.cap,.zone,.base,.animals,.frame { transition:none; } }
+</style>
+</head>
+<body>
+<div class="stage" id="stage" role="img" aria-label="Who Am I：一幅像張開大嘴的奇幻世界插畫，可以點選各個區域">
+  <div class="view">
+    <div class="cam" id="cam"><div class="world" id="world"></div></div>
+    <img class="frame" id="frame" alt="">
+    <div class="credit">插畫 © chihling512，保留所有權利</div>
+  </div>
+</div>
+<div class="cap" aria-live="polite">
+  <h2 id="title"></h2>
+  <p id="text"></p>
+  <div class="ctl"><span id="count"></span>
+    <div><button id="prev" aria-label="上一區">‹</button><button id="next" aria-label="下一區">›</button><button id="reset" aria-label="回到全圖">✕</button></div>
+  </div>
+</div>
+
+<script>
+/* ===== 想改文字就改這裡 =====
+   look：這一區看得到什麼　story：你想寫的故事（留空就只顯示 look）
+   順序就是「上一區／下一區」的順序 */
+const ZONES = [
+ {"key": "circus", "name": "馬戲區", "look": "世界最前面的入口，有馬戲團、彩雲和圍起來的場地。", "story": "", "bbox": [468, 1307, 1526, 1872]},
+ {"key": "gate", "name": "大門", "look": "圍著整個世界的圍牆與大門，門上有裝飾，還有弓。", "story": "", "bbox": [40, 313, 2019, 1662]},
+ {"key": "garden", "name": "花火炮台", "look": "炮台圈著中間的玫瑰園，園裡一顆顆的眼睛是監視器。", "story": "", "bbox": [374, 790, 1606, 1544]},
+ {"key": "castle", "name": "中城", "look": "中城區，有城堡和樹屋，頂上有天台和望遠鏡。", "story": "", "bbox": [495, 279, 1439, 1051]},
+ {"key": "cat", "name": "貓抓板與小窩", "look": "左前方，有貓抓板、玩具、水池和小窩。", "story": "", "bbox": [58, 533, 674, 1450]},
+ {"key": "witch", "name": "魔域", "look": "右前方，有魔城、冒著火的鍋、藥水瓶和一條龍。", "story": "", "bbox": [1411, 637, 1961, 1386]},
+ {"key": "yoga", "name": "瑜珈與放飛區", "look": "左後方，做瑜珈、運動和放飛的地方，天上飄著熱氣球。", "story": "", "bbox": [49, 345, 744, 820]},
+ {"key": "moon", "name": "月池", "look": "右後方，月亮映在池面上，周圍有梯子和裝飾。", "story": "", "bbox": [1293, 335, 1796, 771]},
+ {"key": "park", "name": "遊樂場", "look": "世界最後方，有熊貓、鬼屋和各種遊樂設施。", "story": "", "bbox": [591, 115, 1478, 575]}
+];
+const A = {"base": "assets/base.webp", "frame": "assets/frame.webp", "zones": {"park": "assets/park.webp", "yoga": "assets/yoga.webp", "moon": "assets/moon.webp", "witch": "assets/witch.webp", "cat": "assets/cat.webp", "castle": "assets/castle.webp", "garden": "assets/garden.webp", "gate": "assets/gate.webp", "circus": "assets/circus.webp"}, "sprites": [{"src": "assets/sp/guard00.webp", "x": 1273, "y": 1032, "w": 113, "h": 130, "kind": "guard"}, {"src": "assets/sp/guard01.webp", "x": 601, "y": 1059, "w": 103, "h": 121, "kind": "guard"}, {"src": "assets/sp/guard02.webp", "x": 926, "y": 1136, "w": 147, "h": 162, "kind": "guard"}, {"src": "assets/sp/perform03.webp", "x": 1155, "y": 1604, "w": 30, "h": 53, "kind": "perform"}, {"src": "assets/sp/perform04.webp", "x": 889, "y": 1674, "w": 37, "h": 48, "kind": "perform"}, {"src": "assets/sp/perform05.webp", "x": 1001, "y": 1725, "w": 31, "h": 48, "kind": "perform"}, {"src": "assets/sp/wander06.webp", "x": 415, "y": 566, "w": 25, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander07.webp", "x": 385, "y": 689, "w": 31, "h": 23, "kind": "wander"}, {"src": "assets/sp/wander08.webp", "x": 1670, "y": 723, "w": 26, "h": 44, "kind": "wander"}, {"src": "assets/sp/wander09.webp", "x": 281, "y": 729, "w": 37, "h": 17, "kind": "wander"}, {"src": "assets/sp/wander10.webp", "x": 403, "y": 770, "w": 21, "h": 32, "kind": "wander"}, {"src": "assets/sp/wander11.webp", "x": 470, "y": 807, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander12.webp", "x": 841, "y": 856, "w": 23, "h": 36, "kind": "wander"}, {"src": "assets/sp/wander13.webp", "x": 308, "y": 863, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander14.webp", "x": 1678, "y": 891, "w": 44, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander15.webp", "x": 230, "y": 925, "w": 18, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander16.webp", "x": 401, "y": 1006, "w": 21, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander17.webp", "x": 1013, "y": 1039, "w": 26, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander18.webp", "x": 1664, "y": 1114, "w": 26, "h": 134, "kind": "wander"}]};
+const ORDER = ["park","yoga","moon","witch","cat","castle","garden","gate","circus"]; // 由後到前
+const $ = id => document.getElementById(id);
+const stage = $("stage"), cam = $("cam"), world = $("world"), frame = $("frame");
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+frame.src = A.frame;
+const mk = (src, cls, parent) => { const i = new Image(); i.src = src; i.alt = ""; i.draggable = false; i.className = cls; (parent || world).appendChild(i); return i; };
+mk(A.base, "base");
+const imgs = {}; ORDER.forEach(k => imgs[k] = mk(A.zones[k], "zone"));
+const box = document.createElement("div"); box.className = "animals"; world.appendChild(box);
+const pets = A.sprites.map(s => {
+  const el = mk(s.src, "an", box); const p = 100 / 2048;
+  el.style.left = s.x * p + "%"; el.style.top = s.y * p + "%"; el.style.width = s.w * p + "%";
+  return { el, kind: s.kind, a: [0,1,2,3].map(() => Math.random() * 6.28), sp: .5 + Math.random() * .5 };
+});
+
+/* 每一區的透明度遮罩，用來判斷滑鼠在哪一區 */
+const MS = 512, masks = {}; let ready = false;
+Promise.all(ORDER.map(k => imgs[k].decode().catch(() => {}).then(() => {
+  const c = document.createElement("canvas"); c.width = c.height = MS;
+  const x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(imgs[k], 0, 0, MS, MS);
+  const d = x.getImageData(0, 0, MS, MS).data, m = new Uint8Array(MS * MS);
+  for (let i = 0; i < m.length; i++) m[i] = d[i * 4 + 3]; masks[k] = m;
+}))).then(() => { ready = true; });
+const OFF = [[0,0],[3,0],[-3,0],[0,3],[0,-3]], FRONT = ORDER.slice().reverse();
+function hit(e) {
+  if (!ready) return null;
+  const r = world.firstChild.getBoundingClientRect(), u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+  if (u < 0 || u > 1 || v < 0 || v > 1) return null;
+  const cx = Math.floor(u * MS), cy = Math.floor(v * MS);
+  for (const k of FRONT) for (const [dx, dy] of OFF) {
+    const x = cx + dx, y = cy + dy;
+    if (x >= 0 && y >= 0 && x < MS && y < MS && masks[k][y * MS + x] > 40) return k;
+  }
+  return null;
+}
+
+let cur = -1, hov = null, tx = 0, ty = 0, px = 0, py = 0;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+function setHover(k) {
+  if (k === hov) return;
+  if (hov) imgs[hov].classList.remove("hov"); hov = k; if (k) imgs[k].classList.add("hov");
+  stage.classList.toggle("hand", !!k);
+}
+function go(i) {
+  cur = (i + ZONES.length) % ZONES.length;
+  const z = ZONES[cur], W = stage.clientWidth, [x0, y0, x1, y1] = z.bbox;
+  const k = clamp(.78 * Math.min(2048 / (x1 - x0), 2048 * .6 / (y1 - y0)), 1.25, 3);
+  const ox = clamp(W * .5 - (x0 + x1) / 2 / 2048 * W * k, W - W * k, 0);
+  const oy = clamp(W * .4 - (y0 + y1) / 2 / 2048 * W * k, W - W * k, 0);
+  cam.style.transform = `translate(${ox}px,${oy}px) scale(${k})`;
+  stage.classList.add("sel"); document.body.classList.add("sel-on");
+  ORDER.forEach(o => imgs[o].classList.toggle("on", o === z.key));
+  $("title").textContent = z.name; $("text").textContent = z.story ? z.look + " " + z.story : z.look;
+  $("count").textContent = (cur + 1) + " / " + ZONES.length;
+}
+function reset() {
+  cur = -1; cam.style.transform = "translate(0,0) scale(1)";
+  stage.classList.remove("sel"); document.body.classList.remove("sel-on"); ORDER.forEach(o => imgs[o].classList.remove("on"));
+}
+$("prev").onclick = () => go(cur - 1); $("next").onclick = () => go(cur + 1); $("reset").onclick = reset;
+stage.addEventListener("click", e => {
+  const k = hit(e);
+  if (k) go(ZONES.findIndex(z => z.key === k)); else if (cur >= 0) reset();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") reset();
+  if (e.key === "ArrowRight") go(cur + 1);
+  if (e.key === "ArrowLeft") go(cur < 0 ? ZONES.length - 1 : cur - 1);
+});
+stage.addEventListener("pointermove", e => {
+  const r = stage.getBoundingClientRect();
+  tx = ((e.clientX - r.left) / r.width - .5) * 2; ty = ((e.clientY - r.top) / r.height - .5) * 2;
+  if (e.pointerType === "mouse") setHover(hit(e));
+});
+stage.addEventListener("pointerleave", () => { tx = ty = 0; setHover(null); });
+window.addEventListener("resize", () => { if (cur >= 0) go(cur); });
+
+/* 視差與小動物：畫跟著滑鼠動的幅度大，外框動的幅度小 */
+function tick(ms) {
+  const t = ms / 1000, f = cur < 0 ? 1 : .35, s = stage.clientWidth / 2048;
+  px += (tx - px) * .08; py += (ty - py) * .08;
+  world.style.transform = `scale(1.035) translate3d(${-px * 14 * f}px,${-py * 14 * f}px,0) rotateX(${-py * 3 * f}deg) rotateY(${px * 3 * f}deg)`;
+  frame.style.transform = `translate3d(${-px * 5 * f}px,${-py * 5 * f}px,0) scale(1.012)`;
+  if (cur < 0) for (const p of pets) {
+    const [a, b, c, d] = p.a, w = t * p.sp; let dx = 0, dy = 0, rot = 0;
+    if (p.kind === "wander") { dx = 28 * Math.sin(w + a) + 11 * Math.sin(w * 2.3 + b); dy = 17 * Math.sin(w * .9 + c) + 2 * Math.sin(t * 5 + d); }
+    else if (p.kind === "perform") { dx = 10 * Math.sin(w * .7 + a); dy = -Math.abs(Math.sin(t * 2 + b)) * 14; }
+    else { dy = 2 * Math.sin(t * 1.3 + a); rot = 1.5 * Math.sin(t * .9 + b); }
+    p.el.style.transform = `translate(${dx * s}px,${dy * s}px) rotate(${rot}deg)`;
+  }
+  requestAnimationFrame(tick);
+}
+if (!still) requestAnimationFrame(tick);
+</script>
+</body>
+</html>
