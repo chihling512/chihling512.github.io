@@ -18,7 +18,10 @@
   .cam { position:absolute; inset:0; transform-origin:0 0; perspective:1200px; transition:transform .9s cubic-bezier(.2,.8,.2,1); }
   .world { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
   .world img { position:absolute; inset:0; width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none; pointer-events:none; }
+  .zone { position:absolute; inset:0; }
   .zone, .base { transition:filter .5s; }
+  .eye { position:absolute; -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+  .world .eye img { inset:auto; height:auto; will-change:transform; }
   .zone.hov { filter:brightness(1.22) saturate(1.1) drop-shadow(0 0 14px rgba(255,217,138,.7)); transition-duration:.25s; }
   .sel .base { filter:brightness(.4); }
   .sel .zone:not(.on) { filter:brightness(.4) saturate(.7); }
@@ -43,14 +46,14 @@
   .ctl button:focus-visible { outline:2px solid var(--glow); }
   .credit { position:absolute; right:2.4%; bottom:1.4%; font-size:clamp(.55rem,1.2vw,.75rem); color:rgba(246,238,242,.55); pointer-events:none; transition:opacity .5s; }
   .sel .credit { opacity:0; }
-  @media (prefers-reduced-motion: reduce) { .cam,.cap,.zone,.base,.animals,.frame { transition:none; } }
   .back { position:fixed; left:12px; top:calc(12px + env(safe-area-inset-top,0px)); z-index:5; width:40px; height:40px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(11,11,13,.55); color:var(--glow); text-decoration:none; font-size:1.2rem; opacity:.7; transition:opacity .3s, background .3s; }
   .back:hover { opacity:1; background:rgba(255,217,138,.15); }
   .back:focus-visible { outline:2px solid var(--glow); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce) { .cam,.cap,.zone,.base,.animals,.frame { transition:none; } }
 </style>
 </head>
 <body>
-  <a class="back" href="../" aria-label="回首頁">←</a>
+<a class="back" href="../" aria-label="回首頁">←</a>
 <div class="stage" id="stage" role="img" aria-label="Who Am I：一幅像張開大嘴的奇幻世界插畫，可以點選各個區域">
   <div class="view">
     <div class="cam" id="cam"><div class="world" id="world"></div></div>
@@ -81,7 +84,7 @@ const ZONES = [
  {"key": "moon", "name": "月池", "look": "右後方，月亮映在池面上，周圍有梯子和裝飾。", "story": "", "bbox": [1293, 335, 1796, 771]},
  {"key": "park", "name": "遊樂場", "look": "世界最後方，有熊貓、鬼屋和各種遊樂設施。", "story": "", "bbox": [591, 115, 1478, 575]}
 ];
-const A = {"base": "assets/base.webp", "frame": "assets/frame.webp", "zones": {"park": "assets/park.webp", "yoga": "assets/yoga.webp", "moon": "assets/moon.webp", "witch": "assets/witch.webp", "cat": "assets/cat.webp", "castle": "assets/castle.webp", "garden": "assets/garden.webp", "gate": "assets/gate.webp", "circus": "assets/circus.webp"}, "sprites": [{"src": "assets/sp/guard00.webp", "x": 1273, "y": 1032, "w": 113, "h": 130, "kind": "guard"}, {"src": "assets/sp/guard01.webp", "x": 601, "y": 1059, "w": 103, "h": 121, "kind": "guard"}, {"src": "assets/sp/guard02.webp", "x": 926, "y": 1136, "w": 147, "h": 162, "kind": "guard"}, {"src": "assets/sp/perform03.webp", "x": 1155, "y": 1604, "w": 30, "h": 53, "kind": "perform"}, {"src": "assets/sp/perform04.webp", "x": 889, "y": 1674, "w": 37, "h": 48, "kind": "perform"}, {"src": "assets/sp/perform05.webp", "x": 1001, "y": 1725, "w": 31, "h": 48, "kind": "perform"}, {"src": "assets/sp/wander06.webp", "x": 415, "y": 566, "w": 25, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander07.webp", "x": 385, "y": 689, "w": 31, "h": 23, "kind": "wander"}, {"src": "assets/sp/wander08.webp", "x": 1670, "y": 723, "w": 26, "h": 44, "kind": "wander"}, {"src": "assets/sp/wander09.webp", "x": 281, "y": 729, "w": 37, "h": 17, "kind": "wander"}, {"src": "assets/sp/wander10.webp", "x": 403, "y": 770, "w": 21, "h": 32, "kind": "wander"}, {"src": "assets/sp/wander11.webp", "x": 470, "y": 807, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander12.webp", "x": 841, "y": 856, "w": 23, "h": 36, "kind": "wander"}, {"src": "assets/sp/wander13.webp", "x": 308, "y": 863, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander14.webp", "x": 1678, "y": 891, "w": 44, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander15.webp", "x": 230, "y": 925, "w": 18, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander16.webp", "x": 401, "y": 1006, "w": 21, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander17.webp", "x": 1013, "y": 1039, "w": 26, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander18.webp", "x": 1664, "y": 1114, "w": 26, "h": 134, "kind": "wander"}]};
+const A = {"base": "assets/base.webp", "frame": "assets/frame.webp", "zones": {"park": "assets/park.webp", "yoga": "assets/yoga.webp", "moon": "assets/moon.webp", "witch": "assets/witch.webp", "cat": "assets/cat.webp", "castle": "assets/castle.webp", "garden": "assets/garden.webp", "gate": "assets/gate.webp", "circus": "assets/circus.webp"}, "sprites": [{"src": "assets/sp/guard00.webp", "x": 1273, "y": 1032, "w": 113, "h": 130, "kind": "guard"}, {"src": "assets/sp/guard01.webp", "x": 601, "y": 1059, "w": 103, "h": 121, "kind": "guard"}, {"src": "assets/sp/guard02.webp", "x": 926, "y": 1136, "w": 147, "h": 162, "kind": "guard"}, {"src": "assets/sp/perform03.webp", "x": 1155, "y": 1604, "w": 30, "h": 53, "kind": "perform"}, {"src": "assets/sp/perform04.webp", "x": 889, "y": 1674, "w": 37, "h": 48, "kind": "perform"}, {"src": "assets/sp/perform05.webp", "x": 1001, "y": 1725, "w": 31, "h": 48, "kind": "perform"}, {"src": "assets/sp/wander06.webp", "x": 415, "y": 566, "w": 25, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander07.webp", "x": 385, "y": 689, "w": 31, "h": 23, "kind": "wander"}, {"src": "assets/sp/wander08.webp", "x": 1670, "y": 723, "w": 26, "h": 44, "kind": "wander"}, {"src": "assets/sp/wander09.webp", "x": 281, "y": 729, "w": 37, "h": 17, "kind": "wander"}, {"src": "assets/sp/wander10.webp", "x": 403, "y": 770, "w": 21, "h": 32, "kind": "wander"}, {"src": "assets/sp/wander11.webp", "x": 470, "y": 807, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander12.webp", "x": 841, "y": 856, "w": 23, "h": 36, "kind": "wander"}, {"src": "assets/sp/wander13.webp", "x": 308, "y": 863, "w": 23, "h": 33, "kind": "wander"}, {"src": "assets/sp/wander14.webp", "x": 1678, "y": 891, "w": 44, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander15.webp", "x": 230, "y": 925, "w": 18, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander16.webp", "x": 401, "y": 1006, "w": 21, "h": 29, "kind": "wander"}, {"src": "assets/sp/wander17.webp", "x": 1013, "y": 1039, "w": 26, "h": 37, "kind": "wander"}, {"src": "assets/sp/wander18.webp", "x": 1664, "y": 1114, "w": 26, "h": 134, "kind": "wander"}], "eyes": [{"m": "assets/eye/m00.webp", "i": "assets/eye/i00.webp", "x": 1013, "y": 806, "w": 66, "h": 35, "ix": 10, "iy": 0, "iw": 36, "ih": 35, "occ": 0}, {"m": "assets/eye/m01.webp", "i": "assets/eye/i01.webp", "x": 1270, "y": 866, "w": 39, "h": 20, "ix": 2, "iy": 1, "iw": 22, "ih": 19, "occ": 0}, {"m": "assets/eye/m02.webp", "i": "assets/eye/i02.webp", "x": 1129, "y": 870, "w": 29, "h": 19, "ix": 6, "iy": 0, "iw": 20, "ih": 19, "occ": 0}, {"m": "assets/eye/m03.webp", "i": "assets/eye/i03.webp", "x": 753, "y": 887, "w": 40, "h": 16, "ix": 9, "iy": 0, "iw": 25, "ih": 16, "occ": 0}, {"m": "assets/eye/m04.webp", "i": "assets/eye/i04.webp", "x": 826, "y": 899, "w": 59, "h": 33, "ix": 11, "iy": 0, "iw": 35, "ih": 22, "occ": 0}, {"m": "assets/eye/m05.webp", "i": "assets/eye/i05.webp", "x": 947, "y": 904, "w": 33, "h": 19, "ix": 3, "iy": 2, "iw": 23, "ih": 17, "occ": 0}, {"m": "assets/eye/m06.webp", "i": "assets/eye/i06.webp", "x": 644, "y": 925, "w": 29, "h": 18, "ix": 5, "iy": 0, "iw": 20, "ih": 18, "occ": 0}, {"m": "assets/eye/m07.webp", "i": "assets/eye/i07.webp", "x": 1347, "y": 951, "w": 26, "h": 8, "ix": 2, "iy": 0, "iw": 20, "ih": 8, "occ": 0}, {"m": "assets/eye/m08.webp", "i": "assets/eye/i08.webp", "x": 721, "y": 1001, "w": 22, "h": 10, "ix": 2, "iy": 2, "iw": 16, "ih": 8, "occ": 0}, {"m": "assets/eye/m09.webp", "i": "assets/eye/i09.webp", "x": 1124, "y": 1028, "w": 47, "h": 23, "ix": 6, "iy": 0, "iw": 32, "ih": 23, "occ": 0}, {"m": "assets/eye/m10.webp", "i": "assets/eye/i10.webp", "x": 810, "y": 1031, "w": 39, "h": 20, "ix": 1, "iy": 2, "iw": 24, "ih": 18, "occ": 0}, {"m": "assets/eye/m11.webp", "i": "assets/eye/i11.webp", "x": 938, "y": 1033, "w": 28, "h": 10, "ix": 5, "iy": 0, "iw": 17, "ih": 10, "occ": 0}, {"m": "assets/eye/m12.webp", "i": "assets/eye/i12.webp", "x": 1200, "y": 1066, "w": 22, "h": 9, "ix": 2, "iy": 0, "iw": 19, "ih": 9, "occ": 0}, {"m": "assets/eye/m13.webp", "i": "assets/eye/i13.webp", "x": 923, "y": 1126, "w": 39, "h": 19, "ix": 10, "iy": 0, "iw": 25, "ih": 19, "occ": 0}]};
 const ORDER = ["park","yoga","moon","witch","cat","castle","garden","gate","circus"]; // 由後到前
 const $ = id => document.getElementById(id);
 const stage = $("stage"), cam = $("cam"), world = $("world"), frame = $("frame");
@@ -89,7 +92,15 @@ const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
 frame.src = A.frame;
 const mk = (src, cls, parent) => { const i = new Image(); i.src = src; i.alt = ""; i.draggable = false; i.className = cls; (parent || world).appendChild(i); return i; };
 mk(A.base, "base");
-const imgs = {}; ORDER.forEach(k => imgs[k] = mk(A.zones[k], "zone"));
+const imgs = {}, zel = {};
+ORDER.forEach(k => { const d = document.createElement("div"); d.className = "zone"; world.appendChild(d); zel[k] = d; imgs[k] = mk(A.zones[k], "", d); });
+/* 玫瑰園的眼睛：眼珠是獨立的一層，被「眼白的形狀」裁切，所以不會跑出眼睛外面 */
+const eyes = A.eyes.map(e => {
+  const w = document.createElement("div"), p = 100 / 2048; w.className = "eye";
+  w.style.cssText = `left:${e.x*p}%;top:${e.y*p}%;width:${e.w*p}%;height:${e.h*p}%;-webkit-mask-image:url('${e.m}');mask-image:url('${e.m}')`;
+  const i = mk(e.i, "", w); i.style.left = e.ix / e.w * 100 + "%"; i.style.top = e.iy / e.h * 100 + "%"; i.style.width = e.iw / e.w * 100 + "%";
+  zel.garden.appendChild(w); return { e, i, ox: 0, oy: 0 };
+});
 const box = document.createElement("div"); box.className = "animals"; world.appendChild(box);
 const pets = A.sprites.map(s => {
   const el = mk(s.src, "an", box); const p = 100 / 2048;
@@ -118,11 +129,11 @@ function hit(e) {
   return null;
 }
 
-let cur = -1, hov = null, tx = 0, ty = 0, px = 0, py = 0;
+let cur = -1, hov = null, tx = 0, ty = 0, px = 0, py = 0, mx = null, my = null;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 function setHover(k) {
   if (k === hov) return;
-  if (hov) imgs[hov].classList.remove("hov"); hov = k; if (k) imgs[k].classList.add("hov");
+  if (hov) zel[hov].classList.remove("hov"); hov = k; if (k) zel[k].classList.add("hov");
   stage.classList.toggle("hand", !!k);
 }
 function go(i) {
@@ -133,13 +144,13 @@ function go(i) {
   const oy = clamp(W * .4 - (y0 + y1) / 2 / 2048 * W * k, W - W * k, 0);
   cam.style.transform = `translate(${ox}px,${oy}px) scale(${k})`;
   stage.classList.add("sel"); document.body.classList.add("sel-on");
-  ORDER.forEach(o => imgs[o].classList.toggle("on", o === z.key));
+  ORDER.forEach(o => zel[o].classList.toggle("on", o === z.key));
   $("title").textContent = z.name; $("text").textContent = z.story ? z.look + " " + z.story : z.look;
   $("count").textContent = (cur + 1) + " / " + ZONES.length;
 }
 function reset() {
   cur = -1; cam.style.transform = "translate(0,0) scale(1)";
-  stage.classList.remove("sel"); document.body.classList.remove("sel-on"); ORDER.forEach(o => imgs[o].classList.remove("on"));
+  stage.classList.remove("sel"); document.body.classList.remove("sel-on"); ORDER.forEach(o => zel[o].classList.remove("on"));
 }
 $("prev").onclick = () => go(cur - 1); $("next").onclick = () => go(cur + 1); $("reset").onclick = reset;
 stage.addEventListener("click", e => {
@@ -152,11 +163,11 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") go(cur < 0 ? ZONES.length - 1 : cur - 1);
 });
 stage.addEventListener("pointermove", e => {
-  const r = stage.getBoundingClientRect();
+  const r = stage.getBoundingClientRect(); mx = e.clientX; my = e.clientY;
   tx = ((e.clientX - r.left) / r.width - .5) * 2; ty = ((e.clientY - r.top) / r.height - .5) * 2;
   if (e.pointerType === "mouse") setHover(hit(e));
 });
-stage.addEventListener("pointerleave", () => { tx = ty = 0; setHover(null); });
+stage.addEventListener("pointerleave", () => { tx = ty = 0; mx = my = null; setHover(null); });
 window.addEventListener("resize", () => { if (cur >= 0) go(cur); });
 
 /* 視差與小動物：畫跟著滑鼠動的幅度大，外框動的幅度小 */
@@ -165,6 +176,15 @@ function tick(ms) {
   px += (tx - px) * .08; py += (ty - py) * .08;
   world.style.transform = `scale(1.035) translate3d(${-px * 14 * f}px,${-py * 14 * f}px,0) rotateX(${-py * 3 * f}deg) rotateY(${px * 3 * f}deg)`;
   frame.style.transform = `translate3d(${-px * 5 * f}px,${-py * 5 * f}px,0) scale(1.012)`;
+  const br = world.firstChild.getBoundingClientRect();
+  for (const q of eyes) {   /* 眼珠看向滑鼠；沒有滑鼠時自己東張西望 */
+    const e = q.e, ex = br.left + (e.x + e.w / 2) / 2048 * br.width, ey = br.top + (e.y + e.h / 2) / 2048 * br.height;
+    let dx, dy;
+    if (mx === null) { dx = Math.sin(t * .6 + e.x); dy = .5 * Math.sin(t * .45 + e.y); }
+    else { const vx = mx - ex, vy = my - ey, d = Math.hypot(vx, vy) || 1, k = Math.min(1, d / 160); dx = vx / d * k; dy = vy / d * k; }
+    q.ox += (dx * e.w * .25 - q.ox) * .12; q.oy += (dy * e.h * .45 - q.oy) * .12;
+    q.i.style.transform = `translate(${q.ox * s}px,${q.oy * s}px)`;
+  }
   if (cur < 0) for (const p of pets) {
     const [a, b, c, d] = p.a, w = t * p.sp; let dx = 0, dy = 0, rot = 0;
     if (p.kind === "wander") { dx = 28 * Math.sin(w + a) + 11 * Math.sin(w * 2.3 + b); dy = 17 * Math.sin(w * .9 + c) + 2 * Math.sin(t * 5 + d); }
