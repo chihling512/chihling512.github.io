@@ -2,128 +2,114 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>chihling512｜個人網頁</title>
-<meta name="description" content="chihling512 的個人網頁：用科技把電子工具用得更順手。">
-<style>
-  /* ============================================
-     想換顏色？只要改下面這幾行的色碼（#開頭的那串）
-     ============================================ */
-  :root {
-    --bg: #0b0b0d;      /* 背景：黑 */
-    --ink: #f6eef2;     /* 主要文字：淡粉白 */
-    --muted: #a99ba3;   /* 次要文字：灰粉 */
-    --line: #2b2227;    /* 分隔線 */
-    --accent: #ff5fa2;  /* 主色：粉紅（連結、剩餘空間） */
-    --seg1: #f6eef2;    /* 容量長條的四個色塊，由深到淺 */
-    --seg2: #bba8b2;
-    --seg3: #7b6772;
-    --seg4: #3e3138;
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; color-scheme: dark; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
-    font-size: 17px;
-    line-height: 1.75;
-  }
-  main { max-width: 640px; margin: 0 auto; padding: 72px 24px 96px; }
-  h1 { font-size: clamp(2.4rem, 9vw, 3.8rem); line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 12px; }
-  h2 { font-size: 1.15rem; font-weight: 700; margin: 64px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-  p { margin: 0 0 1em; }
-  .lead { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-
-  /* 主視覺：像 Mac「儲存空間」的容量長條，粉紅斜線是剩餘空間 */
-  .bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
-  .bar span { display: block; height: 100%; transform-origin: left; animation: grow 900ms ease-out both; }
-  .s1 { width: 30%; background: var(--seg1); }
-  .s2 { width: 24%; background: var(--seg2); }
-  .s3 { width: 20%; background: var(--seg3); }
-  .s4 { width: 16%; background: var(--seg4); }
-  .free { width: 10%; background: repeating-linear-gradient(135deg, var(--accent) 0 6px, transparent 6px 12px); }
-  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  @media (prefers-reduced-motion: reduce) { .bar span { animation: none; } }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; padding: 0; list-style: none; font-size: 0.85rem; color: var(--muted); }
-  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-  .note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
-
-  ul.plain { padding-left: 1.2em; margin: 0 0 1em; }
-  ul.plain li { margin-bottom: 6px; }
-  .project h3 { margin: 0 0 4px; font-size: 1.1rem; }
-  .project p { margin-bottom: 10px; }
-  .meta { font-size: 0.9rem; color: var(--muted); }
-  .downloads { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 6px; }
-  .btn {
-    display: inline-block; padding: 8px 16px; border: 1px solid var(--accent); border-radius: 6px;
-    color: var(--accent); text-decoration: none; font-size: 0.95rem;
-  }
-  .btn:hover { background: var(--accent); color: var(--bg); }
-  footer { margin-top: 72px; font-size: 0.85rem; color: var(--muted); }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>chihling｜Welcome to my world</title>
+<meta name="description" content="chihling 的個人網站：平面設計、插畫與正在進行的網頁實驗。拖曳星球、拉下拉環，進來逛逛。">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Noto+Sans+TC:wght@500;900&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/home.css">
 </head>
 <body>
-<main>
-  <header>
-    <h1>chihling512</h1>
-    <p class="lead">我不是程式設計師，只是想用科技，把電子工具用得更順手的人。</p>
 
-    <div class="bar" role="img" aria-label="儲存空間示意圖：大部分已使用，剩下約 10%">
-      <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="free"></span>
-    </div>
-    <ul class="legend">
-      <li><i style="background:var(--seg1)"></i>系統</li>
-      <li><i style="background:var(--seg2)"></i>應用程式</li>
-      <li><i style="background:var(--seg3)"></i>文件</li>
-      <li><i style="background:var(--seg4)"></i>其他</li>
-      <li><i style="background:repeating-linear-gradient(135deg,var(--accent) 0 3px,transparent 3px 6px);border:1px solid var(--accent)"></i>剩餘</li>
-    </ul>
-    <p class="note">這條長條就是我做第一個小工具的原因：Mac 容量快滿時，我想要有人提醒我。</p>
-  </header>
+<main id="stage" class="stage">
+  <canvas id="planet" aria-label="可以用滑鼠或手指拖曳旋轉的 3D 星球" role="img"></canvas>
+  <p id="loading" class="loading">星球載入中…</p>
 
-  <section>
-    <h2>關於我</h2>
-    <div class="project">
-      <h3>Who Am I</h3>
-      <p>大二時畫的一幅插畫，可以點進每一區看看。</p>
-      <div class="downloads">
-        <a class="btn" href="art/who-am-i.html">走進畫裡</a>
-      </div>
-      </div>
-    <p>我正在一步一步嘗試這些事：</p>
-    <ul class="plain">
-      <li>幫自己的電腦做資料整理</li>
-      <li>學習 Illustrator 與 Photoshop，並結合 AI 一起使用</li>
-      <li>創造出自己想像中的電子精靈</li>
-    </ul>
-  </section>
+  <h1 class="title only-d"><svg viewBox="0 0 1700 546" role="img" aria-label="Welcome to my world">
+  <text x="0" y="292" font-size="412" textLength="1697" lengthAdjust="spacingAndGlyphs">WELCOME</text>
+  <text x="16" y="544" font-size="295" textLength="1682" lengthAdjust="spacingAndGlyphs">to MY WORLD</text>
+</svg></h1>
+  <h1 class="title only-m"><svg viewBox="0 0 1276 408" role="img" aria-label="Welcome to my world">
+  <text x="0" y="219" font-size="309" textLength="1274" lengthAdjust="spacingAndGlyphs">WELCOME</text>
+  <text x="13" y="408" font-size="222" textLength="1263" lengthAdjust="spacingAndGlyphs">to MY WORLD</text>
+</svg></h1>
 
-  <section>
-    <h2>我做的東西</h2>
-    <div class="project">
-      <h3>Mac 容量不足提醒</h3>
-      <p>Mac 剩餘空間低於 50GB 時，跳出視窗提醒我重新開機；另外還有一個選單列小工具，隨時顯示剩餘空間。兩個可以分開安裝。</p>
-      <div class="downloads">
-        <a class="btn" href="mac-low-disk-alert/install_low_disk_alert.sh" download>下載：容量不足提醒</a>
-        <a class="btn" href="mac-low-disk-alert/install_disk_menubar.sh" download>下載：選單列顯示</a>
-      </div>
-      <p class="meta">適用於 macOS。安裝與解除安裝的步驟請看<a href="mac-low-disk-alert/README.md">說明文件</a>。</p>
-    </div>
-    </div>
-  </section>
-  
+  <!-- 方向標選單：桌面版與手機版各一套（只會顯示其中一套） -->
+  <nav id="menu" aria-label="主選單">
+<svg class="hang only-d" viewBox="0 0 2100 2100" aria-hidden="false" focusable="false">
+  <rect class="pole" x="636" y="-4000" width="33" height="5890"/>
+  <rect class="pole" x="1318" y="-4000" width="33" height="5890"/>
+  <a class="sign" href="soon.html#about" aria-label="關於我 About">
+    <polygon points="440,303 446,359 479,404 539,436 635,457 636,486 668,486 669,462 1101,486 1403,486 1461,471 1500,449 1527,414 1538,362 1530,306 1499,264 1439,230 1351,208 1350,188 1318,188 1317,202 880,188 580,190 516,205 474,228 449,262"/>
+    <text x="993" y="336" dy="0.36em" font-size="130" text-anchor="middle"><tspan class="zh">關於我</tspan><tspan class="en" dx="36" font-size="96">About</tspan></text>
+  </a>
+  <a class="sign" href="portfolio.html" aria-label="作品集 Portfolio">
+    <polygon points="345,565 443,887 1513,875 1830,765 1476,615 1351,608 1350,565 1318,565 1317,605 668,565"/>
+    <text x="1003" y="732" dy="0.36em" font-size="130" text-anchor="middle"><tspan class="zh">作品集</tspan><tspan class="en" dx="36" font-size="96">Portfolio</tspan></text>
+  </a>
+  <a class="sign" href="soon.html#services" aria-label="服務項目 Services">
+    <polygon points="242,1049 454,1276 1644,1277 1659,967 1318,967 668,1017 668,967 636,967 634,1022"/>
+    <text x="1029" y="1131" dy="0.36em" font-size="130" text-anchor="middle"><tspan class="zh">服務項目</tspan><tspan class="en" dx="36" font-size="96">Services</tspan></text>
+  </a>
+  <a class="sign" href="soon.html#journal" aria-label="部落格 Journal">
+    <polygon points="103,1518 477,1685 771,1685 1318,1633 1318,1685 1350,1685 1351,1627 1803,1582 1696,1394 434,1389"/>
+    <text x="960" y="1524" dy="0.36em" font-size="130" text-anchor="middle"><tspan class="zh">部落格</tspan><tspan class="en" dx="36" font-size="96">Journal</tspan></text>
+  </a>
+  <a class="sign" href="resources.html" aria-label="資源下載 Resources">
+    <polygon points="253,1818 321,1911 266,2035 1599,2041 1805,1837 1641,1738 1318,1738 668,1787 668,1738 636,1738 631,1792"/>
+    <text x="1040" y="1898" dy="0.36em" font-size="130" text-anchor="middle"><tspan class="zh">資源下載</tspan><tspan class="en" dx="36" font-size="96">Resources</tspan></text>
+  </a>
+</svg>
+<svg class="hang only-m" viewBox="0 0 3691 3900" aria-hidden="false" focusable="false">
+  <rect class="pole" x="1232" y="-4000" width="61" height="7565"/>
+  <rect class="pole" x="2494" y="-4000" width="61" height="7565"/>
+  <a class="sign" href="soon.html#about" aria-label="關於我 About">
+    <polygon points="872,622 875,719 915,797 1032,875 1231,923 1232,985 1292,985 1294,932 2261,985 2639,978 2838,901 2883,837 2901,746 2889,651 2837,573 2727,506 2555,462 2554,421 2494,421 2493,452 1155,425 948,488 893,549"/>
+    <text x="1895" y="700" dy="0.36em" font-size="240" text-anchor="middle"><tspan class="zh">關於我</tspan><tspan class="en" dx="67" font-size="178">About</tspan></text>
+  </a>
+  <a class="sign" href="portfolio.html" aria-label="作品集 Portfolio">
+    <polygon points="691,1109 877,1723 2554,1723 2555,1700 2852,1696 3443,1491 2784,1213 2555,1200 2554,1109 2494,1109 2493,1196 1292,1109"/>
+    <text x="1906" y="1433" dy="0.36em" font-size="240" text-anchor="middle"><tspan class="zh">作品集</tspan><tspan class="en" dx="67" font-size="178">Portfolio</tspan></text>
+  </a>
+  <a class="sign" href="soon.html#services" aria-label="服務項目 Services">
+    <polygon points="505,2016 897,2437 3096,2447 3126,1849 2494,1849 2492,1877 1310,1960 1292,1849 1232,1849 1231,1965"/>
+    <text x="1968" y="2170" dy="0.36em" font-size="240" text-anchor="middle"><tspan class="zh">服務項目</tspan><tspan class="en" dx="67" font-size="178">Services</tspan></text>
+  </a>
+  <a class="sign" href="soon.html#journal" aria-label="部落格 Journal">
+    <polygon points="247,2883 980,3211 2494,3095 2494,3211 2554,3211 2558,3085 3392,3003 3194,2654 864,2643"/>
+    <text x="1833" y="2892" dy="0.36em" font-size="240" text-anchor="middle"><tspan class="zh">部落格</tspan><tspan class="en" dx="67" font-size="178">Journal</tspan></text>
+  </a>
+  <a class="sign" href="resources.html" aria-label="資源下載 Resources">
+    <polygon points="548,3840 3013,3851 3396,3471 3068,3277 2494,3277 1313,3383 1292,3277 1232,3277 1227,3389 525,3438 654,3615"/>
+    <text x="1985" y="3584" dy="0.36em" font-size="240" text-anchor="middle"><tspan class="zh">資源下載</tspan><tspan class="en" dx="67" font-size="178">Resources</tspan></text>
+  </a>
+</svg>
+  </nav>
 
-  <section>
-    <h2>聯絡我</h2>
-      <p>Github<br><a href="https://github.com/chihling512">github.com/chihling512</a></p>
-      <p>IG帳號<br><a href="https://www.instagram.com/chihling_512/">＠chihling_512</a></p>
-  </section>
-
-  <footer>© 2026 chihling512<br>程式碼採 MIT 授權。插畫作品保留所有權利，未經同意請勿轉載或使用。</footer>
+  <!-- 拉繩與拉環：點一下，或向下拖曳都可以打開選單 -->
+  <div class="rope" aria-hidden="false">
+    <div class="cord" aria-hidden="true"></div>
+    <button id="ring" class="ring" type="button" aria-expanded="false" aria-controls="menu" aria-label="拉開選單">
+      <span class="ring-visual"></span>
+      <svg class="pull-label" viewBox="0 0 560 130" aria-hidden="true"><text x="0" y="104" font-size="122" textLength="550" lengthAdjust="spacingAndGlyphs">PULL ME!!</text></svg>
+    </button>
+  </div>
 </main>
+
+<footer id="footer" class="footer">
+  <div class="icons">
+<a class="ico" href="https://www.instagram.com/chihling_512/" aria-label="Instagram @chihling_512" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="0.9" fill="currentColor" stroke="none"/></svg>
+</a>
+<a class="ico" href="https://github.com/chihling512" aria-label="GitHub chihling512" target="_blank" rel="noopener">
+  <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+</a>
+<a class="ico ico-mail" href="#" data-u="hikari23579" data-d="gmail.com" aria-label="寄信給我">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="1.8" y="4.5" width="20.4" height="15" rx="1.2"/><path d="M1.8 5l10.2 8 10.2-8M1.8 19.2l7.4-7.6M22.2 19.2l-7.4-7.6"/></svg>
+</a>
+<a class="ico" href="https://www.youtube.com/@CLC-512" aria-label="YouTube @CLC-512" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><rect x="0.8" y="3.8" width="22.4" height="16.4" rx="5" fill="currentColor"/><path d="M9.8 8.4l6 3.6-6 3.6z" fill="#fafafa"/></svg>
+</a>
+  </div>
+  <div class="legal">
+    <p class="copy">© 2026 chihling chang.</p>
+    <p class="rights">本網站內所有文字、圖片與作品版權皆屬本站所有，未經授權請勿轉載或用於商業用途。</p>
+  </div>
+</footer>
+
+<noscript><p class="noscript">這個網站需要開啟 JavaScript 才能顯示互動星球。</p></noscript>
+<script src="assets/home.js"></script>
 </body>
 </html>

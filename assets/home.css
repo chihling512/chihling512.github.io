@@ -1,0 +1,169 @@
+/* ==========================================================
+   首頁樣式（home.css）
+   尺寸單位說明：版面是照你的設計圖（桌面 8000×4222、手機 3691×7384）量出來的，
+   程式會算出「每個設計單位 = 幾個螢幕像素」放在 --u，所以下面的數字
+   （例如 989.5）都是你設計圖上的位置，會跟著視窗大小等比例縮放。
+   想換字型：只改最上面三個 --font-xxx。
+   ========================================================== */
+:root {
+  --u: 0.2px;            /* 每個設計單位的像素（由 home.js 依視窗大小填入） */
+  --p: 0;                /* 選單打開的程度：0 = 收起，1 = 完全打開（由 home.js 控制） */
+  --accent: #ff5fa2;     /* 粉紅主色（滑過方向標、鍵盤焦點） */
+
+  --font-title: "Playfair Display", "Noto Serif TC", Georgia, serif;           /* WELCOME to MY WORLD */
+  --font-ui:    "Fredoka", "Noto Sans TC", system-ui, sans-serif;               /* PULL ME、英文小字、版權 */
+  --font-cjk:   "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; /* 方向標中文 */
+
+  /* ---- 桌面版（寬螢幕）的設計數字 ---- */
+  --footer-h: clamp(52px, 3.5vw, 96px);
+  --f: calc(100vw / 8000);          /* 頁尾用：每個設計單位的像素 */
+  --cord-w: 33;                     /* 拉繩粗細 = 拉環粗細 */
+  --ring-d: 252;                    /* 拉環外徑 */
+  --rx0: calc(989.5 * var(--u));    /* 拉環中心 X：收起時 */
+  --rx1: calc(989.5 * var(--u));    /* 拉環中心 X：打開時 */
+  --ry0: 711;                       /* 拉環中心 Y：收起時 */
+  --ry1: 3172;                      /* 拉環中心 Y：打開時 */
+  --hang-h: 2042;                   /* 最下面一塊方向標的底部 Y */
+  --label-w: 560;                   /* PULL ME 文字寬度 */
+  --label-top: 364;                 /* PULL ME 距離拉環上緣 */
+}
+/* ---- 手機版（直式畫面）的設計數字 ---- */
+@media (max-aspect-ratio: 9/10) {
+  :root {
+    --footer-h: clamp(56px, 16.7vw, 92px);
+    --f: calc(100vw / 3691);
+    --cord-w: 61;
+    --ring-d: 468;
+    --rx0: calc(100% - 454.5 * var(--u));
+    --rx1: calc(50% + 44 * var(--u));
+    --ry0: 1146.5;
+    --ry1: 5939;
+    --hang-h: 3852;
+    --label-w: 670;
+    --label-top: 582.5;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; background: #000; overflow: hidden;
+  overscroll-behavior: none; -webkit-text-size-adjust: 100%;
+}
+body { font-family: var(--font-cjk); color: #fff; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.only-m { display: none; }
+@media (max-aspect-ratio: 9/10) {
+  .only-d { display: none; }
+  .only-m { display: block; }
+}
+
+/* ---------- 舞台（頁尾以上的整個區域） ---------- */
+.stage { position: fixed; inset: 0 0 var(--footer-h) 0; overflow: hidden; background: #000; }
+
+#planet {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+  opacity: 0; transition: opacity .8s ease; touch-action: none;
+}
+#planet.ready { opacity: 1; }
+#planet.grab { cursor: grab; }
+#planet.dragging { cursor: grabbing; }
+
+.loading {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  margin: 0; color: #8a8a8a; font: 500 14px var(--font-ui); letter-spacing: .08em;
+  transition: opacity .5s ease; z-index: 1; pointer-events: none;
+}
+.loading.done { opacity: 0; }
+
+/* ---------- 標題 ---------- */
+.title { position: absolute; margin: 0; z-index: 2; pointer-events: none; }
+.title svg { display: block; width: 100%; height: 100%; overflow: visible;
+  fill: #fafafa; font-family: var(--font-title); font-weight: 900; text-rendering: geometricPrecision; }
+.title.only-d { top: calc(135 * var(--u)); right: calc(186 * var(--u)); width: calc(1700 * var(--u)); height: calc(546 * var(--u)); }
+.title.only-m { top: calc(162 * var(--u)); left: calc(50% + (1200 - 1845.5) * var(--u));
+  width: calc(1276 * var(--u)); height: calc(408 * var(--u));
+  opacity: max(0, calc(1 - var(--p) * 1.3)); }
+
+/* ---------- 方向標（掛在兩根桿子上，往下滑出來） ---------- */
+.hang {
+  position: absolute; top: 0; overflow: visible; z-index: 3; pointer-events: none;
+  transform: translateY(calc((var(--p) - 1) * var(--hang-box) * var(--u)));
+}
+.hang.only-d { left: 0; width: calc(2100 * var(--u)); height: calc(2100 * var(--u)); --hang-box: 2100; }
+.hang.only-m { left: calc(50% - 1845.5 * var(--u)); width: calc(3691 * var(--u)); height: calc(3900 * var(--u)); --hang-box: 3900; }
+:root[data-state="closed"] .hang { visibility: hidden; }
+
+.pole { fill: #fff; }
+.sign { cursor: pointer; pointer-events: none; }
+:root[data-state="open"] .sign { pointer-events: all; }
+.sign polygon { fill: #fff; stroke: transparent; stroke-linejoin: round; transition: fill .15s ease; }
+.sign text { font-family: var(--font-cjk); }
+.sign .zh { font-weight: 900; fill: #000; }
+.sign .en { font-family: var(--font-ui); font-weight: 500; fill: #666; transition: fill .15s ease; }
+.sign:hover polygon, .sign:focus-visible polygon { fill: var(--accent); }
+.sign:hover .en, .sign:focus-visible .en { fill: #000; }
+.sign:focus-visible { outline: none; }
+.sign:focus-visible polygon { stroke: #fff; stroke-width: 24; }
+
+/* ---------- 拉繩與拉環 ---------- */
+.rope { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.cord {
+  position: absolute; background: #fff;
+  width: calc(var(--cord-w) * var(--u));
+  left: calc(var(--rx0) + (var(--rx1) - var(--rx0)) * var(--p) - var(--cord-w) * var(--u) / 2);
+  top: calc(var(--p) * var(--hang-h) * var(--u));
+  height: calc((var(--ry0) + (var(--ry1) - var(--ry0)) * var(--p) - var(--p) * var(--hang-h) - (var(--ring-d) / 2 - var(--cord-w))) * var(--u));
+}
+.ring {
+  position: absolute; pointer-events: auto; padding: 0; border: 0; background: none; cursor: grab;
+  color: inherit; font: inherit; touch-action: none; -webkit-tap-highlight-color: transparent; user-select: none;
+  width: calc(var(--ring-d) * var(--u)); height: calc(var(--ring-d) * var(--u));
+  left: calc(var(--rx0) + (var(--rx1) - var(--rx0)) * var(--p) - var(--ring-d) * var(--u) / 2);
+  top: calc((var(--ry0) + (var(--ry1) - var(--ry0)) * var(--p)) * var(--u) - var(--ring-d) * var(--u) / 2);
+}
+.ring::after { content: ""; position: absolute; inset: -22px -22px -22px -22px; }   /* 加大可點範圍 */
+.ring.dragging { cursor: grabbing; }
+.ring-visual {
+  position: absolute; inset: 0; border-radius: 50%; background: transparent;
+  border: calc(var(--cord-w) * var(--u)) solid #fff;
+}
+.ring:focus-visible { outline: none; }
+.ring:focus-visible .ring-visual { box-shadow: 0 0 0 calc(18 * var(--u)) var(--accent); }
+.pull-label {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(var(--label-top) * var(--u));
+  width: calc(var(--label-w) * var(--u)); height: calc(var(--label-w) * var(--u) * 130 / 560);
+  overflow: visible; fill: #fff; font-family: var(--font-ui); font-weight: 600; pointer-events: none;
+  opacity: max(0, calc(1 - var(--p) * 3));
+}
+:root[data-state="closed"] .ring { animation: bob 2.8s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(22 * var(--u))); } }
+
+/* ---------- 頁尾 ---------- */
+.footer {
+  position: fixed; left: 0; right: 0; bottom: 0; height: var(--footer-h); z-index: 5;
+  background: #fafafa; color: #000;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 calc(50 * var(--f)) 0 calc(461 * var(--f));
+}
+.icons { display: flex; align-items: center; gap: calc(104 * var(--f)); flex: none; }
+.ico { display: block; width: max(26px, calc(185 * var(--f))); color: #000; }
+.ico svg { display: block; width: 100%; height: auto; }
+.legal { text-align: right; min-width: 0; }
+.legal p { margin: 0; }
+.copy { font: 600 max(12px, calc(80 * var(--f))) / 1.25 var(--font-ui); }
+.rights { font: 400 calc(36 * var(--f)) / 1.35 var(--font-cjk); color: #8f8f8f; margin-top: 2px; }
+@media (max-aspect-ratio: 9/10) {
+  .footer { padding: 0 calc(71 * var(--f)) 0 calc(145 * var(--f)); }
+  .icons { gap: calc(150 * var(--f)); }
+  .ico { width: max(24px, calc(249 * var(--f))); }
+  .copy { font-size: max(11px, calc(74 * var(--f))); }
+  .rights { font-size: calc(52 * var(--f)); }
+}
+.noscript { position: fixed; left: 0; right: 0; top: 40%; text-align: center; color: #aaa; margin: 0; z-index: 6; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-state="closed"] .ring { animation: none; }
+  #planet, .loading, .sign polygon, .sign .en { transition: none; }
+}

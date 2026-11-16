@@ -1,0 +1,16 @@
+:root{--bg:#0b0b0d;--ink:#f6eef2;--muted:#a99ba3;--line:#2b2227;--accent:#ff5fa2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:640px;margin:0 auto;padding:72px 24px 96px}
+a{color:var(--accent)}
+.back{display:inline-block;margin-bottom:32px;text-decoration:none;color:var(--muted);font-size:14px}
+.back:hover{color:var(--accent)}
+h1{font-size:28px;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 40px}
+.project{border-top:1px solid var(--line);padding:28px 0}
+.project h3{margin:0 0 8px;font-size:20px}
+.project p{margin:0 0 16px}
+.btn{display:inline-block;margin:0 8px 8px 0;padding:8px 16px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:15px}
+.btn:hover{background:var(--accent);color:var(--bg)}
+.meta{color:var(--muted);font-size:14px;margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding-top:24px;color:var(--muted);font-size:13px}

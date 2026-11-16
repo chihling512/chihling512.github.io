@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>施工中｜chihling</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #fafafa; }
+  body { display: grid; place-items: center; text-align: center; padding: 24px;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif; }
+  h1 { font-size: clamp(1.6rem, 6vw, 2.6rem); margin: 0 0 .4em; }
+  p { color: #aaa; margin: 0 0 1.6em; line-height: 1.7; }
+  a { color: #ff5fa2; text-underline-offset: 4px; }
+  a:focus-visible { outline: 3px solid #ff5fa2; outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <main>
+    <h1 id="t">這一區還在施工中</h1>
+    <p>地圖上的路還沒鋪好，過一陣子再來看看。</p>
+    <a href="./">← 回到星球</a>
+  </main>
+<script>
+  var names = { about: '「關於我」', portfolio: '「作品集」', services: '「服務項目」', journal: '「部落格」', resources: '「資源下載」' };
+  var k = location.hash.replace('#', '');
+  if (names[k]) document.getElementById('t').textContent = names[k] + '還在施工中';
+</script>
+</body>
+</html>
