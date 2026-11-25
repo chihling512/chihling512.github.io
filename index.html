@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>chihling｜Welcome to my world</title>
-<meta name="description" content="chihling 的個人網站：平面設計、插畫與正在進行的網頁實驗。拖曳星球、拉下拉環，進來逛逛。">
+<meta name="description" content="chihling 的個人網站：平面設計、插畫與正在進行的網頁實驗。拖曳星球、點一下進入星球、拉下拉環，進來逛逛。">
 <meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,7 @@
 <main id="stage" class="stage">
   <canvas id="planet" aria-label="可以用滑鼠或手指拖曳旋轉的 3D 星球" role="img"></canvas>
   <p id="loading" class="loading">星球載入中…</p>
+  <a id="enter" class="enter" href="planet.html">進入星球</a>
 
   <h1 class="title only-d"><svg viewBox="0 0 1700 546" role="img" aria-label="Welcome to my world">
   <text x="0" y="292" font-size="412" textLength="1697" lengthAdjust="spacingAndGlyphs">WELCOME</text>
@@ -111,5 +112,7 @@
 
 <noscript><p class="noscript">這個網站需要開啟 JavaScript 才能顯示互動星球。</p></noscript>
 <script src="assets/home.js"></script>
+<script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
+<script type="module" src="assets/home-planet.js"></script>
 </body>
 </html>
